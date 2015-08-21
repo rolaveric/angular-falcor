@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+  <h1>Angular1 + Falcor test</h1>
+
+  <falcor-sample>Loading App...</falcor-sample>
+
+  <script src="jspm_packages/system.js"></script>
+  <script src="config.js"></script>
+  <script>
+    System.import('index.js')
+        .then(function() {
+          angular.bootstrap(document, ['falcorExample'])
+        });
+  </script>
+</body>
+</html>

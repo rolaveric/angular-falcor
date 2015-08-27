@@ -36,15 +36,17 @@ export const TodoRouter = Router.createClass([
     route: "todos[{integers:indexes}]['name', 'done']",
     // Gets items
     get: function (pathSet) {
-      // Build a 'JSON Graph Response'
-      return Promise.resolve({ // Using a Promise just to prove we can
-        jsonGraph: {
-          todos: pathSet.indexes.reduce((memo, index) => {
-            memo[index] = data.todos[index];
-            return memo;
-          }, {})
-        }
-      });
+      // Build a set of PathValues
+      const pathValues = pathSet.indexes.reduce((memo, index) => {
+        memo.push(
+          {path: ['todos', index, 'name'], value: data.todos[index].name},
+          {path: ['todos', index, 'done'], value: data.todos[index].done}
+        );
+        return memo;
+      }, []);
+
+      // Using a Promise, just to prove it works
+      return Promise.resolve(pathValues);
     },
 
     // Updates items

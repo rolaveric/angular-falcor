@@ -1,10 +1,12 @@
 <div ng-if="ctrl.activated">
-  <h3>Todos: {{ctrl.todosLength}}</h3>
+  <h3>Todos: {{'todos.length' | rol_getValue:ctrl.model}}</h3>
   <ul>
-    <li ng-repeat="item in ctrl.todos">{{item.index + 1}}: {{item.todo.name}}</li>
+    <li ng-repeat="index in 'todos.length' | rol_getValue:ctrl.model | rol_pageRange:ctrl.page:ctrl.pageSize">
+      {{index + 1}}: {{'todos[' + index + '].name' | rol_getValue:ctrl.model}} - {{'todos[' + index + '].done' | rol_getValue:ctrl.model}}
+    </li>
   </ul>
   <button type="button" ng-click="ctrl.addTodo()">Add</button>
   <button ng-if="ctrl.page > 1" type="button" ng-click="ctrl.changePage(ctrl.page - 1)">Previous Page</button>
-  <button ng-if="ctrl.todosLength > (ctrl.page * ctrl.pageSize)" type="button" ng-click="ctrl.changePage(ctrl.page + 1)">Next Page</button>
+  <button ng-if="('todos.length' | rol_getValue:ctrl.model) > (ctrl.page * ctrl.pageSize)" type="button" ng-click="ctrl.changePage(ctrl.page + 1)">Next Page</button>
 </div>
 <div ng-if="!ctrl.activated">Loading Data...</div>

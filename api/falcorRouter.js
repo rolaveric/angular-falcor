@@ -45,8 +45,13 @@ export const TodoRouter = Router.createClass([
         return memo;
       }, []);
 
-      // Using a Promise, just to prove it works
-      return Promise.resolve(pathValues);
+      // Using a promise which resolves after 2 seconds to mimic latency
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log('resolving');
+          resolve(pathValues);
+        }, 2000);
+      });
     },
 
     // Updates items

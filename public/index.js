@@ -1,13 +1,12 @@
 import 'babel/polyfill';
-import falcor from 'falcor';
-import HttpDataSource from 'falcor-http-datasource';
 import angular from 'angular';
-import rxAngular from 'rx-angular';
+import falcor from './angularFalcor.js';
 import template from './app.html!text';
 
 class MyController {
-  constructor($scope) {
+  constructor($scope, falcor) {
     this.$scope = $scope;
+    this.falcor = falcor;
     this.activated = false;
 
     this.page = 1;
@@ -22,8 +21,8 @@ class MyController {
    */
   activate() {
     // Define module, using cached data
-    this.model = new falcor.Model({
-        source: new HttpDataSource('/model.json')
+    this.model = new this.falcor.Model({
+        source: new this.falcor.HttpDataSource('/model.json')
       }).batch();
     this.activated = true;
   }
@@ -46,57 +45,9 @@ class MyController {
     this.page = newPage;
   }
 }
-MyController.$inject = ['$scope'];
+MyController.$inject = ['$scope', 'falcor'];
 
-/**
- * Generates a filter which simply calls 'getValue()' with a falcor model and path.
- * The idea is that it's stateless, meaning it will always return the same observable.
- * @returns {Function}
- */
-function getValueFilterProvider($parse, $rootScope) {
-  var inProgress = []; // A cache of async calls that are currently in progress
-  return function getValueFilter(path, model) {
-    if (model && path) {
-      // Try to get the value from cache
-      const value = $parse(path)(model.getCache(path));
-      if (typeof value !== 'undefined') {
-        return typeof value === 'object' ? value.value : value;
-      }
-
-      if (!inProgress.find((i) => i.model === model && i.path === path)) {
-        // If the value isn't in cache, make the call and we'll get it on the next digest loop
-        const cache = {model, path};
-        inProgress.push(cache);
-        model.getValue(path)
-          .safeApply($rootScope)
-          .subscribe(() => {
-            // Invalidate the observable cache
-            inProgress.splice(inProgress.findIndex((i) => i === cache), 1);
-          });
-      }
-    }
-  };
-}
-getValueFilterProvider.$inject = ['$parse', '$rootScope'];
-
-/**
- * Generates a filter which produces a range of numbers for pagination.
- * Useful when all you have is an item count to iterate over.
- */
-function pageRangeFilterProvider() {
-  return function pageRangeFilter(itemCount, currentPage, pageSize) {
-    itemCount = isNaN(itemCount) ? 0 : itemCount;
-    currentPage = currentPage || 1;
-    pageSize = pageSize || 5;
-    const range = [];
-    for (var x = (currentPage - 1) * pageSize; x < currentPage * pageSize && x < itemCount; x++) {
-      range.push(x);
-    }
-    return range;
-  };
-}
-
-angular.module('falcorExample', ['rx'])
+angular.module('falcorExample', [falcor])
   .directive('falcorSample', () => {
     return {
       template: template,
@@ -105,6 +56,4 @@ angular.module('falcorExample', ['rx'])
       bindToController: true,
       scope: {}
     };
-  })
-  .filter('rol_getValue', getValueFilterProvider)
-  .filter('rol_pageRange', pageRangeFilterProvider);
+  });

@@ -1,12 +1,12 @@
 <div ng-if="ctrl.activated">
-  <h3>Todos: {{'todos.length' | rol_getValue:ctrl.model}}</h3>
+  <h3>Todos: {{ctrl.model.getViewValue('todos.length')}}</h3>
   <ul>
-    <li ng-repeat="index in 'todos.length' | rol_getValue:ctrl.model | rol_pageRange:ctrl.page:ctrl.pageSize">
-      {{index + 1}}: {{'todos[' + index + '].name' | rol_getValue:ctrl.model}} - {{'todos[' + index + '].done' | rol_getValue:ctrl.model}}
+    <li ng-repeat="index in ctrl.model.getViewValue('todos.length') | pageRange:ctrl.page:ctrl.pageSize">
+      {{:: index + 1}}: {{:: ctrl.model.getViewValue(['todos', index, 'name'])}} - {{:: ctrl.model.getViewValue(['todos', index, 'done'])}}
     </li>
   </ul>
   <button type="button" ng-click="ctrl.addTodo()">Add</button>
   <button ng-if="ctrl.page > 1" type="button" ng-click="ctrl.changePage(ctrl.page - 1)">Previous Page</button>
-  <button ng-if="('todos.length' | rol_getValue:ctrl.model) > (ctrl.page * ctrl.pageSize)" type="button" ng-click="ctrl.changePage(ctrl.page + 1)">Next Page</button>
+  <button ng-if="ctrl.model.getViewValue('todos.length') > (ctrl.page * ctrl.pageSize)" type="button" ng-click="ctrl.changePage(ctrl.page + 1)">Next Page</button>
 </div>
 <div ng-if="!ctrl.activated">Loading Data...</div>

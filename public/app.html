@@ -2,10 +2,16 @@
   <h3>Todos: {{ctrl.model.getViewValue('todos.length')}}</h3>
   <ul>
     <li ng-repeat="index in ctrl.model.getViewValue('todos.length') | pageRange:ctrl.page:ctrl.pageSize">
-      {{:: index + 1}}: {{:: ctrl.model.getViewValue(['todos', index, 'name'])}} - {{:: ctrl.model.getViewValue(['todos', index, 'done'])}}
+      <span>{{:: index + 1}}: </span>
+      <input type="checkbox" ng-model="ctrl.model.viewGetterSetter(['todos', index, 'done'])" ng-model-options="{ getterSetter: true }"/>
+      {{:: ctrl.model.getViewValue(['todos', index, 'name'])}}
     </li>
   </ul>
-  <button type="button" ng-click="ctrl.addTodo()">Add</button>
+  <div>
+    <label>New Item:</label>
+    <input type="text" ng-model="ctrl.newName"/>
+    <button type="button" ng-click="ctrl.addTodo()">Add</button>
+  </div>
   <button ng-if="ctrl.page > 1" type="button" ng-click="ctrl.changePage(ctrl.page - 1)">Previous Page</button>
   <button ng-if="ctrl.model.getViewValue('todos.length') > (ctrl.page * ctrl.pageSize)" type="button" ng-click="ctrl.changePage(ctrl.page + 1)">Next Page</button>
 </div>

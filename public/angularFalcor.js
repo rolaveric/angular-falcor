@@ -59,6 +59,20 @@ export function falcorFactory($parse, $rootScope) {
     }
   };
 
+  /**
+   * Returns a function which can be used with ngModelOptions `getterSetter: true` set.
+   * @param path {string|Array} Path to the value on the Model that's being get and set.  Must resolve to only a single value.
+   * @param [$scope=$rootScope] {object} Optionally specific the $scope that safeApply() uses.
+   * @returns {Function}
+   */
+  falcor.Model.prototype.viewGetterSetter = function(path, $scope) {
+    var model = this;
+    $scope = $scope || $rootScope;
+    return function (newValue) {
+      return arguments.length ? model.setValue(path, newValue).safeApply($scope).subscribe() : model.getViewValue(path, $scope);
+    }
+  };
+
   return falcor;
 }
 falcorFactory.$inject = ['$parse', '$rootScope'];

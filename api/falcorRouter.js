@@ -104,28 +104,29 @@ export const TodoRouter = Router.createClass([
   {
     route: 'todos.add',
     call: function (callPath, args) {
-      const name = args[0], done = args[1];
+      const newItem = args[0];
 
       // Validate arguments
-      if (!name || typeof name !== 'string') {
+      // TODO: Use JSON Schema to simplify this
+      if (!newItem.name || typeof newItem.name !== 'string') {
         throw new Error("invalid name value");
       }
-      if (typeof done !== 'boolean') {
+      if (typeof newItem.done !== 'boolean') {
         throw new Error("invalid done value")
       }
 
       // Add new record to the data
-      const newLength = data.todos.push({name, done});
+      const newLength = data.todos.push({name: newItem.name, done: newItem.done});
 
       // Returns list of changed/invalidated paths
       return [
         {
           path: ['todos', newLength - 1, 'name'],
-          value: name
+          value: newItem.name
         },
         {
           path: ['todos', newLength - 1, 'done'],
-          value: done
+          value: newItem.done
         },
         {
           path: ['todos', 'length'],

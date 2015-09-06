@@ -11,6 +11,7 @@ class MyController {
 
     this.page = 1;
     this.pageSize = 10;
+    this.newName = '';
 
     // On load
     this.activate();
@@ -31,10 +32,13 @@ class MyController {
    * Creates a new todos item, setting it in the Falcor model and then retrieving the updated data.
    */
   addTodo() {
-    // todos.add(name, done)
-    this.model.call(['todos', 'add'], [String(Math.random()), false])
-      .safeApply(this.$scope)
-      .subscribe();
+    if (this.newName) {
+      // todos.add(name, done)
+      this.model.call(['todos', 'add'], [{name: this.newName, done: false}])
+        .safeApply(this.$scope)
+        .subscribe();
+      this.newName = '';
+    }
   }
 
   /**

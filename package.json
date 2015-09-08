@@ -27,7 +27,6 @@
       "angular": "github:angular/bower-angular@^1.4.4",
       "falcor": "npm:falcor@^0.1.12",
       "falcor-http-datasource": "npm:falcor-http-datasource@^0.1.1",
-      "rx-angular": "npm:rx-angular@^0.0.14",
       "text": "github:systemjs/plugin-text@^0.0.2"
     },
     "devDependencies": {

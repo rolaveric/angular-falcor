@@ -35,8 +35,7 @@ class MyController {
     if (this.newName) {
       // todos.add(name, done)
       this.model.call(['todos', 'add'], [{name: this.newName, done: false}])
-        .safeApply(this.$scope)
-        .subscribe();
+        .subscribe(_ => this.$scope.$evalAsync());
       this.newName = '';
     }
   }

@@ -19,7 +19,6 @@ System.config({
     "core-js": "npm:core-js@0.9.18",
     "falcor": "npm:falcor@0.1.12",
     "falcor-http-datasource": "npm:falcor-http-datasource@0.1.1",
-    "rx-angular": "npm:rx-angular@0.0.14",
     "text": "github:systemjs/plugin-text@0.0.2",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
@@ -128,9 +127,6 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.1",
       "stream-browserify": "npm:stream-browserify@1.0.0",
       "string_decoder": "npm:string_decoder@0.10.31"
-    },
-    "npm:rx-angular@0.0.14": {
-      "rx": "npm:rx@2.5.3"
     },
     "npm:rx@2.5.3": {
       "process": "github:jspm/nodelibs-process@0.1.1"

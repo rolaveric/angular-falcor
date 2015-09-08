@@ -1,7 +1,6 @@
 import angular from 'angular';
 import falcor from 'falcor';
 import HttpDataSource from 'falcor-http-datasource';
-import rxAngular from 'rx-angular';
 
 export function falcorFactory($parse, $rootScope) {
   // Add the HttpDatasource to the falcor object
@@ -18,9 +17,8 @@ export function falcorFactory($parse, $rootScope) {
    * The intention being that the real value will eventually be returned on subsequent $digest loops.
    *
    * @param path {string|array} Path to the value on the Model that's required.  Must resolve to only a single value.
-   * @param [$scope=$rootScope] {object} Optionally specific the $scope that safeApply() uses.
    */
-  falcor.Model.prototype.getViewValue = function(path, $scope) {
+  falcor.Model.prototype.getViewValue = function(path) {
     if (path) {
       // If the path is an array, join them together
       if (angular.isArray(path)) {
@@ -50,10 +48,12 @@ export function falcorFactory($parse, $rootScope) {
         const cache = {model: this, path: path};
         inProgress.push(cache);
         this.getValue(path)
-          .safeApply($scope || $rootScope)
           .subscribe(() => {
             // Invalidate the observable cache
             inProgress.splice(inProgress.findIndex((i) => i === cache), 1);
+
+            // Make sure the $digest loop picks up on the change
+            $rootScope.$evalAsync();
           });
       }
     }
@@ -62,14 +62,14 @@ export function falcorFactory($parse, $rootScope) {
   /**
    * Returns a function which can be used with ngModelOptions `getterSetter: true` set.
    * @param path {string|Array} Path to the value on the Model that's being get and set.  Must resolve to only a single value.
-   * @param [$scope=$rootScope] {object} Optionally specific the $scope that safeApply() uses.
    * @returns {Function}
    */
-  falcor.Model.prototype.viewGetterSetter = function(path, $scope) {
+  falcor.Model.prototype.viewGetterSetter = function(path) {
     var model = this;
-    $scope = $scope || $rootScope;
     return function (newValue) {
-      return arguments.length ? model.setValue(path, newValue).safeApply($scope).subscribe() : model.getViewValue(path, $scope);
+      return arguments.length
+        ? model.setValue(path, newValue).subscribe(_ => $rootScope.$evalAsync())
+        : model.getViewValue(path);
     }
   };
 
@@ -101,7 +101,7 @@ function pageRangeFilterProvider() {
   };
 }
 
-angular.module('falcor', [rxAngular])
+angular.module('falcor', [])
   .factory('falcor', falcorFactory)
   .filter('pageRange', pageRangeFilterProvider);
 

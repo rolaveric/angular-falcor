@@ -24,9 +24,9 @@
       "baseURL": "public"
     },
     "dependencies": {
-      "angular": "github:angular/bower-angular@^1.4.4",
-      "falcor": "npm:falcor@^0.1.12",
-      "falcor-http-datasource": "npm:falcor-http-datasource@^0.1.1",
+      "angular": "github:angular/bower-angular@^1.4.7",
+      "falcor": "npm:falcor@^0.1.13",
+      "falcor-http-datasource": "npm:falcor-http-datasource@^0.1.2",
       "text": "github:systemjs/plugin-text@^0.0.2"
     },
     "devDependencies": {
